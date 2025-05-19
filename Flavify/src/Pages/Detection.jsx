@@ -42,12 +42,11 @@ const DengueRiskCalculator = () => {
     return (
       <>
       <Navbar/>
-        <div className="min-h-screen bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center p-4">
-            <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md shadow-lg rounded-xl border border-white/10 p-6">
+        <div className="min-h-screen bg-gradient-to-br to-red-200 flex items-center justify-center p-4">
+            <div className="w-full max-w-2xl p-6  bg-red-400 border-2  rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 hover:bg-red-400 hover:shadow-2xl hover:border-red-200">
                 <h2 className="text-2xl font-bold text-white text-center mb-6">
                     Enter Your Symptoms
                 </h2>
-
                 {/* Temperature Input */}
                 <div className="mb-6">
                     <label htmlFor="temperature" className="text-white block text-sm font-medium mb-2">
