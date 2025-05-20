@@ -91,7 +91,7 @@ import girl from "../assets/girl.jpg";
 import logo from "../assets/logo.jpg";
 
 const Login = () => {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
