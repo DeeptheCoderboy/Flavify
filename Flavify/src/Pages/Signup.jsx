@@ -4,7 +4,7 @@
 
 // const Signup = () => {
 //   return (
-  
+
 //     <div className="min-h-screen flex">
 //       {/* Left Panel */}
 //       <div className="w-1/3 bg-gradient-to-b from-red-600 to-red-900 text-white flex flex-col items-center justify-center p-6 rounded-tr-[40px] rounded-br-[40px]">
@@ -43,7 +43,7 @@
 //             placeholder="Enter Email Address"
 //             className="w-full border border-gray-400 p-3 rounded"
 //           />
-         
+
 //           <input
 //             type="text"
 //             placeholder="Enter Phone Number (+91)"
@@ -93,18 +93,19 @@
 //         </div> */}
 //       </div>
 //     </div>
-   
-    
+
 //   );
 // };
 
 // export default Signup;
-
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import girl from "../assets/girl.jpg";
 import logo from "../assets/logo.jpg";
+// import { Navigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -207,7 +208,9 @@ const Signup = () => {
         <div className="flex justify-between items-center w-full max-w-xl my-4 text-sm text-gray-700">
           <p>
             Already have an account?{" "}
-            <span className="text-red-600 font-semibold cursor-pointer">
+            <span
+              className="text-red-600 font-semibold cursor-pointer"
+              onClick={() => navigate("/login")}>
               Log In
             </span>
           </p>

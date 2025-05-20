@@ -1,14 +1,14 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/logo.jpg';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/logo.jpg";
 
 export default function Navbar() {
   const location = useLocation();
 
   const scrollToSection = (id) => {
-    if (location.pathname === '/') {
+    if (location.pathname === "/") {
       const section = document.getElementById(id);
-      section?.scrollIntoView({ behavior: 'smooth' });
+      section?.scrollIntoView({ behavior: "smooth" });
     } else {
       window.location.href = `/#${id}`;
     }
@@ -21,11 +21,27 @@ export default function Navbar() {
         <span className="text-xl font-bold tracking-wide">FLAVIFY</span>
       </div>
       <div className="space-x-6 font-medium hidden md:flex">
-        <button onClick={() => scrollToSection('home')} className="hover:underline">Home</button>
-        <button onClick={() => scrollToSection('about')} className="hover:underline">About FLAVIFY</button>
-        <Link to='/detection' className="hover:underline">Detection</Link>
-        <Link to="/login" className="hover:underline">Log In</Link>
-        <Link to="/signup" className="hover:underline">Signup</Link>
+        <button
+          onClick={() => scrollToSection("home")}
+          className="hover:underline"
+        >
+          Home
+        </button>
+        <button
+          onClick={() => scrollToSection("about")}
+          className="hover:underline"
+        >
+          About FLAVIFY
+        </button>
+        <Link to="/detection" className="hover:underline">
+          Detection
+        </Link>
+        <Link to="/login" className="hover:underline">
+          Log In
+        </Link>
+        <Link to="/signup" className="hover:underline">
+          Signup
+        </Link>
       </div>
       {/* Optional mobile dropdown for future */}
     </nav>
