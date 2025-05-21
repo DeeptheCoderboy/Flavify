@@ -1,9 +1,32 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 
-export default function Navbar() {
+const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [username, setUsername] = useState(null);
+
+ useEffect(() => {
+  const syncUser = () => {
+    const storedUsername = localStorage.getItem("username");
+    setUsername(storedUsername);
+  };
+
+  syncUser(); // run initially
+
+  window.addEventListener("storage", syncUser);
+  return () => window.removeEventListener("storage", syncUser);
+}, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("username");
+    setUsername(null);
+    navigate("/login");
+  };
 
   const scrollToSection = (id) => {
     if (location.pathname === "/") {
@@ -20,30 +43,41 @@ export default function Navbar() {
         <img src={logo} alt="FLAVIFY Logo" className="h-10 w-10 rounded-full" />
         <span className="text-xl font-bold tracking-wide">FLAVIFY</span>
       </div>
-      <div className="space-x-6 font-medium hidden md:flex">
-        <button
-          onClick={() => scrollToSection("home")}
-          className="hover:underline"
-        >
+
+      <div className="space-x-6 font-medium hidden md:flex items-center">
+        <button onClick={() => scrollToSection("home")} className="hover:underline">
           Home
         </button>
-        <button
-          onClick={() => scrollToSection("about")}
-          className="hover:underline"
-        >
+        <button onClick={() => scrollToSection("about")} className="hover:underline">
           About FLAVIFY
         </button>
         <Link to="/detection" className="hover:underline">
           Detection
         </Link>
-        <Link to="/login" className="hover:underline">
-          Log In
-        </Link>
-        <Link to="/signup" className="hover:underline">
-          Signup
-        </Link>
+
+        {username ? (
+  <>
+    <span className="text-white font-semibold">Hi, {username}</span>
+    <button
+      onClick={handleLogout}
+      className="bg-white text-red-700 px-3 py-1 rounded hover:bg-gray-200"
+    >
+      Logout
+    </button>
+  </>
+) : (
+  <>
+    <Link to="/login" className="hover:underline">
+      Log In
+    </Link>
+    <Link to="/signup" className="hover:underline">
+      Signup
+    </Link>
+  </>
+)}
       </div>
-      {/* Optional mobile dropdown for future */}
     </nav>
   );
-}
+};
+
+export default Navbar;

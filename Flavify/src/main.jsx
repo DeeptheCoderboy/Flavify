@@ -11,6 +11,9 @@ import "./Main.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
+
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Router>
     <Routes>
@@ -18,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/detection" element={<Detection />} />
+     
     </Routes>
   </Router>
 );
