@@ -7,58 +7,62 @@ from skfuzzy import control as ctrl
 app = Flask(__name__)
 CORS(app)
 
-# Define fuzzy variables
-temperature = ctrl.Antecedent(np.arange(95, 106, 1), 'temperature')
-wbc_count = ctrl.Antecedent(np.arange(1, 16, 1), 'wbc_count')
-platelet_count = ctrl.Antecedent(np.arange(10, 401, 10), 'platelet_count')
-dengue_risk = ctrl.Consequent(np.arange(0, 101, 1), 'dengue_risk')
+# Define fuzzy variables with updated ranges
+temperature = ctrl.Antecedent(np.arange(99, 106, 0.1), 'temperature')           # °F
+wbc_count = ctrl.Antecedent(np.arange(1, 16, 0.1), 'wbc_count')                 # 1000/µL
+platelet_count = ctrl.Antecedent(np.arange(10, 601, 1), 'platelet_count')      # 1000/µL
+dengue_risk = ctrl.Consequent(np.arange(0, 101, 1), 'dengue_risk')             # percentage
 
 # Membership functions
-temperature['low'] = fuzz.trimf(temperature.universe, [95, 95, 98])
-temperature['normal'] = fuzz.trimf(temperature.universe, [97, 98, 100])
-temperature['high'] = fuzz.trimf(temperature.universe, [99, 104, 106])
+temperature['low'] = fuzz.trimf(temperature.universe, [99.1, 99.1, 100.8])
+temperature['normal'] = fuzz.trimf(temperature.universe, [100.4, 101.5, 102.7])
+temperature['high'] = fuzz.trimf(temperature.universe, [102.4, 104.1, 105.8])
 
-wbc_count['low'] = fuzz.trimf(wbc_count.universe, [1, 1, 4])
-wbc_count['normal'] = fuzz.trimf(wbc_count.universe, [3, 7, 11])
-wbc_count['high'] = fuzz.trimf(wbc_count.universe, [10, 15, 15])
+wbc_count['low'] = fuzz.trimf(wbc_count.universe, [1, 1, 6])
+wbc_count['normal'] = fuzz.trimf(wbc_count.universe, [4, 9, 14])
+wbc_count['high'] = fuzz.trimf(wbc_count.universe, [11, 13, 15])
 
-platelet_count['low'] = fuzz.trimf(platelet_count.universe, [10, 10, 150])
-platelet_count['normal'] = fuzz.trimf(platelet_count.universe, [100, 200, 300])
-platelet_count['high'] = fuzz.trimf(platelet_count.universe, [250, 400, 400])
+platelet_count['low'] = fuzz.trimf(platelet_count.universe, [10, 10, 160])
+platelet_count['normal'] = fuzz.trimf(platelet_count.universe, [150, 300, 450])
+platelet_count['high'] = fuzz.trimf(platelet_count.universe, [450, 525, 600])
 
-dengue_risk['low'] = fuzz.trimf(dengue_risk.universe, [0, 0, 50])
-dengue_risk['medium'] = fuzz.trimf(dengue_risk.universe, [25, 50, 75])
-dengue_risk['high'] = fuzz.trimf(dengue_risk.universe, [50, 100, 100])
+dengue_risk['low'] = fuzz.trimf(dengue_risk.universe, [0, 20, 50])
+dengue_risk['medium'] = fuzz.trimf(dengue_risk.universe, [40, 60, 80])
+dengue_risk['high'] = fuzz.trimf(dengue_risk.universe, [70, 90, 100])
 
-# Define rules
-rules = []
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['low'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['high'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['low'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['low'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['high'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['low'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['low'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['high'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['low'], dengue_risk['high']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['medium']))
-rules.append(ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']))
+
+# Define rules (you can adjust these based on new logic)
+rules = [
+    ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['low'], dengue_risk['medium']),
+    ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['medium']),
+    ctrl.Rule(temperature['low'] & wbc_count['low'] & platelet_count['high'], dengue_risk['low']),
+    ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['medium']),
+    ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['low']),
+    ctrl.Rule(temperature['low'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['low']),
+    ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['low'], dengue_risk['medium']),
+    ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['low']),
+    ctrl.Rule(temperature['low'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']),
+    
+    ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['low'], dengue_risk['high']),
+    ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['high']),
+    ctrl.Rule(temperature['normal'] & wbc_count['low'] & platelet_count['high'], dengue_risk['medium']),
+    ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['high']),
+    ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['medium']),
+    ctrl.Rule(temperature['normal'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['low']),
+    ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['low'], dengue_risk['medium']),
+    ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['low']),
+    ctrl.Rule(temperature['normal'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']),
+    
+    ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['low'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['normal'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['low'] & platelet_count['high'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['low'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['normal'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['normal'] & platelet_count['high'], dengue_risk['medium']),
+    ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['low'], dengue_risk['high']),
+    ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['normal'], dengue_risk['medium']),
+    ctrl.Rule(temperature['high'] & wbc_count['high'] & platelet_count['high'], dengue_risk['low']),
+]
 
 # Create control system
 dengue_ctrl = ctrl.ControlSystem(rules)

@@ -3,7 +3,7 @@ import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 
 const DengueRiskCalculator = () => {
-    const [temperature, setTemperature] = useState(97.5);
+    const [temperature, setTemperature] = useState(99.1);
     const [plateletCount, setPlateletCount] = useState(10);
     const [wbcCount, setWbcCount] = useState(1);
     const [risk, setRisk] = useState(null);
@@ -51,15 +51,15 @@ const DengueRiskCalculator = () => {
                     {/* Temperature Input */}
                     <div className="mb-6">
                         <label htmlFor="temperature" className="text-white block text-sm font-medium mb-2">
-                            Enter Body Temperature (in °F)
+                            Enter Fever Temperature (in °F)
                         </label>
                         <div className="flex items-center gap-4">
                             <span className="text-xl font-semibold text-white min-w-[4rem] text-right">{temperature.toFixed(1)}</span>
                             <input
                                 type="range"
                                 id="temperature"
-                                min="90"
-                                max="110"
+                                min="99.1"
+                                max="107"
                                 step="0.1"
                                 value={temperature}
                                 onChange={(e) => setTemperature(parseFloat(e.target.value))}
@@ -142,7 +142,7 @@ const DengueRiskCalculator = () => {
                     <p>
                         <span className="text-green-300">Low (0 - 4)</span>,{" "}
                         <span className="text-yellow-300">Medium (5 - 7)</span>,{" "}
-                        <span className="text-red-400">High (8 - 10)</span>
+                        <span className="text-red-00">High (8 - 10)</span>
                     </p>
                 </div>
             </div>
